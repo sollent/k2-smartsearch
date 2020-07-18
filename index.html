@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="form-group">
+    <label for="select-language">Single Select</label>
+
+    <select id="select-language" class="js-example-basic-single" name="state">
+        <option value="Барвиха">Барвиха</option>
+        <option value="Гринфилд">Гринфилд</option>
+        <option value="Звягино">Звягино</option>
+        <option value="Нахабино">Нахабино</option>
+        <option value="Пентхаус">Пентхаус</option>
+        <option value="Реутов">Реутов</option>
+        <option value="Сколково">Сколково</option>
+        <option value="Смоленск">Смоленск</option>
+        <option value="Сокол">Сокол</option>
+        <option value="Усово">Усово</option>
+        <option value="Бассейн">Бассейн</option>
+        <option value="Усово">Сауна</option>
+        <option value="Усово">СПА</option>
+        <option value="Усово">София</option>
+        <option value="Усово">Бассейн СПА</option>
+        <option value="Усово">Хамам</option>
+        <option value="Усово">Купель</option>
+        <option value="Усово">Стены</option>
+        <option value="Усово">Подъемное дно</option>
+        <option value="Усово">Лестница</option>
+        <option value="Усово">Оборудование</option>
+        <option value="Усово">Отделка</option>
+        <option value="Усово">Подготовка</option>
+        <option value="Усово">Электрика</option>
+        <option value="Усово">Подготовка</option>
+        <option value="Усово">Охрана</option>
+        <option value="Усово">Инструменты</option>
+        <option value="Усово">Платеж</option>
+        <option value="Усово">Транспорт</option>
+        <option value="Усово">Уборка</option>
+        <option value="Усово">Киселев</option>
+        <option value="Усово">Киселеву</option>
+        <option value="Усово">Марков</option>
+        <option value="Усово">Маркову</option>
+        <option value="Усово">Элиана</option>
+        <option value="Усово">Пустовойтенко</option>
+    </select>
+</div>
+<div id="other"></div>
+<script src="https://cdn.jsdelivr.net/npm/multiple-select-js/dist/js/multiple-select.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+<script>
+    let multipleSelect = new MultipleSelect('#select-language', {
+        placeholder: 'Select Language'
+    });
+
+    console.log(multipleSelect);
+
+    let cs = [
+        {
+            name: 'Барвиха'
+        },
+        {
+            name: 'Гринфилд'
+        },
+        {
+            name: 'Звягино'
+        },
+        {
+            name: 'Нахабино'
+        },
+        {
+            name: 'Пентхаус'
+        },
+        {
+            name: 'Реутов'
+        },
+        {
+            name: 'Сколково'
+        },
+        {
+            name: 'Смоленск'
+        },
+        {
+            name: 'Сокол'
+        },
+        {
+            name: 'Усово'
+        },
+        {
+            name: 'Бассейн'
+        },
+        {
+            name: 'Сауна'
+        },
+        {
+            name: 'СПА'
+        },
+        {
+            name: 'София'
+        },
+        {
+            name: 'Бассейн СПА'
+        },
+        {
+            name: 'Хамам'
+        },
+        {
+            name: 'Купель'
+        },
+        {
+            name: 'Стены'
+        },
+        {
+            name: 'Подъемное дно'
+        },
+        {
+            name: 'Лестница'
+        },
+        {
+            name: 'Оборудование'
+        },
+        {
+            name: 'Отделка'
+        },
+        {
+            name: 'Подготовка'
+        },
+        {
+            name: 'Электрика'
+        },
+        {
+            name: 'Охрана'
+        },
+        {
+            name: 'Инструменты'
+        },
+        {
+            name: 'Платеж'
+        },
+        {
+            name: 'Транспорт'
+        },
+        {
+            name: 'Уборка'
+        },
+        {
+            name: 'Киселев'
+        },
+        {
+            name: 'Киселеву'
+        },
+        {
+            name: 'Марков'
+        },
+        {
+            name: 'Маркову'
+        },
+        {
+            name: 'Элиана'
+        },
+        {
+            name: 'Пустовойтенко'
+        }
+    ];
+
+    let countries = [];
+    for (let i = 0; i < cs.length; i++) {
+        countries.push(cs[i].name);
+    }
+
+    // let inp = document.getElementById("myInput");
+    let inp = document.getElementsByClassName("dropdown-select")[0];
+    let other = document.getElementById("other");
+
+    let ms = document.getElementById('multiple-select-container-1');
+    console.log(ms);
+
+    inp.addEventListener('click', onOpenInput);
+
+    function onOpenInput() {
+        console.log('HELLO');
+        var recognizer = new webkitSpeechRecognition();
+        recognizer.interimResults = true;
+        recognizer.lang = 'ru-Ru';
+
+        recognizer.onresult = (e) => {
+            var result = e.results[e.resultIndex];
+            if (result.isFinal) {
+                let resultWord = result[0].transcript;
+                let options = {
+                    keys: ['name']
+                };
+                let f = new Fuse(cs, options);
+                let res = f.search(resultWord);
+                console.log("RESULT:");
+                console.log(res);
+                if (res) {
+                    if (res.length === 0) {
+                        alert('Ничего не найдено');
+                        return;
+                    }
+                    let options = ms.querySelectorAll('ul li');
+                    for (let j = 0; j < options.length; j++) {
+                        if (options[j].classList.contains('list-group-item-primary')) {
+                            options[j].classList.remove('list-group-item-primary')
+                        }
+                    }
+                    for (let j = 0; j < options.length; j++) {
+                        if (options[j].innerHTML === res[0].item.name) {
+                            console.log(options[j]);
+                            options[j].classList.add('list-group-item-primary');
+                        }
+                    }
+                    // for (let i = 0; i < countries.length; i++) {
+                    //     if (countries[i] === res[0].item.name) {
+                    //         let options = ms.querySelectorAll('ul li');
+                    //         console.log(options);
+                    //         for (let j = 0; j < options.length; j++) {
+                    //             if (options[j].classList.contains('list-group-item-primary')) {
+                    //                 options[j].classList.remove('list-group-item-primary')
+                    //             }
+                    //         }
+                    //         console.log(options[i]);
+                    //         console.log(countries[i]);
+                    //         options[i].classList.add('list-group-item-primary');
+                    //     }
+                    // }
+                    other.click();
+                }
+                // for (let i = 0; i < this.voiceTest.length; i++) {
+                //     if (this.voiceTest[i].name.toLowerCase() === resultWord.toLowerCase()) {
+                //         this.voiceTestValues.push({
+                //             name: resultWord
+                //         });
+                //         recognizer.stop();
+                //     }
+                // }
+            } else {
+                console.log('Промежуточный результат: ', result[0].transcript);
+            }
+        };
+
+        recognizer.start();
+    }
+</script>
+</body>
+</html>
